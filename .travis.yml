@@ -11,9 +11,9 @@ before_install:
 - npm install -g npm@'>=2.13.5'
 script:
 - |
-  echo "machine github.com login stellar-jenkins password $GITHUB_TOKEN" >~/.netrc
+  echo "machine github.com login payshares-jenkins password $GITHUB_TOKEN" >~/.netrc
   git config --global user.name "Travis CI"
-  git config --global user.email "travis@stellar.org"
+  git config --global user.email "travis@payshares.org"
   if [ "${SAUCE}" = "true" ]; then
     if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
       gulp test:sauce
@@ -48,18 +48,18 @@ before_deploy: gulp build
 after_deploy: "./after_deploy.sh"
 deploy:
   - provider: npm
-    email: npm@stellar.org
+    email: npm@payshares.org
     api_key:
       secure: SZIsdOgh5eg+i1JSqLYTDv2EgYQTX54LIICX3BpSYjhqCBGeWxGXYhAGtVnBVVxslV1zZNe/H73hdKLMjd58DAda7hQXfrNKaRbijVH4B0ZHsFxyF20919G+GcqiWAeNGfe640SsqStipxXnJegHjVF5r6tmYZS3fmjkZ9Ndqn0=
     skip_cleanup: true
     on:
       tags: true
-      repo: stellar/js-stellar-base
+      repo: payshares/js-payshares-base
       node: 4.7.2
   - provider: script
     script: "./bower_publish.sh"
     skip_cleanup: true
     on:
       tags: true
-      repo: stellar/js-stellar-base
+      repo: payshares/js-payshares-base
       node: 4.7.2

@@ -1,76 +1,76 @@
-describe('StrKey', function() {
+describe('PsrKey', function() {
   before(function() {
-    StellarBase.Network.useTestNetwork();
-    var keypair           = StellarBase.Keypair.master();
+    PaysharesBase.Network.useTestNetwork();
+    var keypair           = PaysharesBase.Keypair.master();
     this.unencodedBuffer  = keypair.rawPublicKey();
     this.unencoded        = this.unencodedBuffer.toString();
     this.accountIdEncoded = keypair.publicKey();
-    this.seedEncoded      = StellarBase.StrKey.encodeEd25519SecretSeed(this.unencodedBuffer);
+    this.seedEncoded      = PaysharesBase.PsrKey.encodeEd25519SecretSeed(this.unencodedBuffer);
   })
 
   after(function() {
-    StellarBase.Network.use(null);
+    PaysharesBase.Network.use(null);
   })
 
   describe('#decodeCheck', function() {
     it("decodes correctly", function() {
-      expect(StellarBase.StrKey.decodeEd25519PublicKey(this.accountIdEncoded)).to.eql(this.unencodedBuffer);
-      expect(StellarBase.StrKey.decodeEd25519SecretSeed(this.seedEncoded)).to.eql(this.unencodedBuffer);
+      expect(PaysharesBase.PsrKey.decodeEd25519PublicKey(this.accountIdEncoded)).to.eql(this.unencodedBuffer);
+      expect(PaysharesBase.PsrKey.decodeEd25519SecretSeed(this.seedEncoded)).to.eql(this.unencodedBuffer);
     });
 
     it("throws an error when the version byte is wrong", function() {
-      expect(() => StellarBase.StrKey.decodeEd25519SecretSeed("GBPXXOA5N4JYPESHAADMQKBPWZWQDQ64ZV6ZL2S3LAGW4SY7NTCMWIVL")).to.throw(/invalid version/);
-      expect(() => StellarBase.StrKey.decodeEd25519PublicKey("SBGWKM3CD4IL47QN6X54N6Y33T3JDNVI6AIJ6CD5IM47HG3IG4O36XCU")).to.throw(/invalid version/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519SecretSeed("GBPXXOA5N4JYPESHAADMQKBPWZWQDQ64ZV6ZL2S3LAGW4SY7NTCMWIVL")).to.throw(/invalid version/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519PublicKey("SBGWKM3CD4IL47QN6X54N6Y33T3JDNVI6AIJ6CD5IM47HG3IG4O36XCU")).to.throw(/invalid version/);
     });
 
     it("throws an error when decoded data encodes to other string", function() {
       // accountId
-      expect(() => StellarBase.StrKey.decodeEd25519PublicKey("GBPXX0A5N4JYPESHAADMQKBPWZWQDQ64ZV6ZL2S3LAGW4SY7NTCMWIVL")).to.throw(/invalid encoded string/);
-      expect(() => StellarBase.StrKey.decodeEd25519PublicKey("GCFZB6L25D26RQFDWSSBDEYQ32JHLRMTT44ZYE3DZQUTYOL7WY43PLBG++")).to.throw(/invalid encoded string/);
-      expect(() => StellarBase.StrKey.decodeEd25519PublicKey("GADE5QJ2TY7S5ZB65Q43DFGWYWCPHIYDJ2326KZGAGBN7AE5UY6JVDRRA")).to.throw(/invalid encoded string/);
-      expect(() => StellarBase.StrKey.decodeEd25519PublicKey("GB6OWYST45X57HCJY5XWOHDEBULB6XUROWPIKW77L5DSNANBEQGUPADT2")).to.throw(/invalid encoded string/);
-      expect(() => StellarBase.StrKey.decodeEd25519PublicKey("GB6OWYST45X57HCJY5XWOHDEBULB6XUROWPIKW77L5DSNANBEQGUPADT2T")).to.throw(/invalid encoded string/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519PublicKey("GBPXX0A5N4JYPESHAADMQKBPWZWQDQ64ZV6ZL2S3LAGW4SY7NTCMWIVL")).to.throw(/invalid encoded string/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519PublicKey("GCFZB6L25D26RQFDWSSBDEYQ32JHLRMTT44ZYE3DZQUTYOL7WY43PLBG++")).to.throw(/invalid encoded string/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519PublicKey("GADE5QJ2TY7S5ZB65Q43DFGWYWCPHIYDJ2326KZGAGBN7AE5UY6JVDRRA")).to.throw(/invalid encoded string/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519PublicKey("GB6OWYST45X57HCJY5XWOHDEBULB6XUROWPIKW77L5DSNANBEQGUPADT2")).to.throw(/invalid encoded string/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519PublicKey("GB6OWYST45X57HCJY5XWOHDEBULB6XUROWPIKW77L5DSNANBEQGUPADT2T")).to.throw(/invalid encoded string/);
       // seed
-      expect(() => StellarBase.StrKey.decodeEd25519SecretSeed("SB7OJNF5727F3RJUG5ASQJ3LUM44ELLNKW35ZZQDHMVUUQNGYW")).to.throw(/invalid encoded string/);
-      expect(() => StellarBase.StrKey.decodeEd25519SecretSeed("SB7OJNF5727F3RJUG5ASQJ3LUM44ELLNKW35ZZQDHMVUUQNGYWMEGB2W2")).to.throw(/invalid encoded string/);
-      expect(() => StellarBase.StrKey.decodeEd25519SecretSeed("SB7OJNF5727F3RJUG5ASQJ3LUM44ELLNKW35ZZQDHMVUUQNGYWMEGB2W2T")).to.throw(/invalid encoded string/);
-      expect(() => StellarBase.StrKey.decodeEd25519SecretSeed("SCMB30FQCIQAWZ4WQTS6SVK37LGMAFJGXOZIHTH2PY6EXLP37G46H6DT")).to.throw(/invalid encoded string/);
-      expect(() => StellarBase.StrKey.decodeEd25519SecretSeed("SAYC2LQ322EEHZYWNSKBEW6N66IRTDREEBUXXU5HPVZGMAXKLIZNM45H++")).to.throw(/invalid encoded string/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519SecretSeed("SB7OJNF5727F3RJUG5ASQJ3LUM44ELLNKW35ZZQDHMVUUQNGYW")).to.throw(/invalid encoded string/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519SecretSeed("SB7OJNF5727F3RJUG5ASQJ3LUM44ELLNKW35ZZQDHMVUUQNGYWMEGB2W2")).to.throw(/invalid encoded string/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519SecretSeed("SB7OJNF5727F3RJUG5ASQJ3LUM44ELLNKW35ZZQDHMVUUQNGYWMEGB2W2T")).to.throw(/invalid encoded string/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519SecretSeed("SCMB30FQCIQAWZ4WQTS6SVK37LGMAFJGXOZIHTH2PY6EXLP37G46H6DT")).to.throw(/invalid encoded string/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519SecretSeed("SAYC2LQ322EEHZYWNSKBEW6N66IRTDREEBUXXU5HPVZGMAXKLIZNM45H++")).to.throw(/invalid encoded string/);
     });
 
     it("throws an error when the checksum is wrong", function() {
-      expect(() => StellarBase.StrKey.decodeEd25519PublicKey("GBPXXOA5N4JYPESHAADMQKBPWZWQDQ64ZV6ZL2S3LAGW4SY7NTCMWIVT")).to.throw(/invalid checksum/);
-      expect(() => StellarBase.StrKey.decodeEd25519SecretSeed("SBGWKM3CD4IL47QN6X54N6Y33T3JDNVI6AIJ6CD5IM47HG3IG4O36XCX")).to.throw(/invalid checksum/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519PublicKey("GBPXXOA5N4JYPESHAADMQKBPWZWQDQ64ZV6ZL2S3LAGW4SY7NTCMWIVT")).to.throw(/invalid checksum/);
+      expect(() => PaysharesBase.PsrKey.decodeEd25519SecretSeed("SBGWKM3CD4IL47QN6X54N6Y33T3JDNVI6AIJ6CD5IM47HG3IG4O36XCX")).to.throw(/invalid checksum/);
     });
   });
 
   describe('#encodeCheck', function() {
     it("encodes a buffer correctly", function() {
-      expect(StellarBase.StrKey.encodeEd25519PublicKey(this.unencodedBuffer)).to.eql(this.accountIdEncoded);
-      expect(StellarBase.StrKey.encodeEd25519PublicKey(this.unencodedBuffer)).to.match(/^G/);
-      expect(StellarBase.StrKey.encodeEd25519SecretSeed(this.unencodedBuffer)).to.eql(this.seedEncoded);
-      expect(StellarBase.StrKey.encodeEd25519SecretSeed(this.unencodedBuffer)).to.match(/^S/);
+      expect(PaysharesBase.PsrKey.encodeEd25519PublicKey(this.unencodedBuffer)).to.eql(this.accountIdEncoded);
+      expect(PaysharesBase.PsrKey.encodeEd25519PublicKey(this.unencodedBuffer)).to.match(/^G/);
+      expect(PaysharesBase.PsrKey.encodeEd25519SecretSeed(this.unencodedBuffer)).to.eql(this.seedEncoded);
+      expect(PaysharesBase.PsrKey.encodeEd25519SecretSeed(this.unencodedBuffer)).to.match(/^S/);
 
-      var strkeyEncoded;
+      var psrkeyEncoded;
 
-      strkeyEncoded = StellarBase.StrKey.encodePreAuthTx(this.unencodedBuffer);
-      expect(strkeyEncoded).to.match(/^T/);
-      expect(StellarBase.StrKey.decodePreAuthTx(strkeyEncoded)).to.eql(this.unencodedBuffer);
+      psrkeyEncoded = PaysharesBase.PsrKey.encodePreAuthTx(this.unencodedBuffer);
+      expect(psrkeyEncoded).to.match(/^T/);
+      expect(PaysharesBase.PsrKey.decodePreAuthTx(psrkeyEncoded)).to.eql(this.unencodedBuffer);
 
-      strkeyEncoded = StellarBase.StrKey.encodeSha256Hash(this.unencodedBuffer);
-      expect(strkeyEncoded).to.match(/^X/);
-      expect(StellarBase.StrKey.decodeSha256Hash(strkeyEncoded)).to.eql(this.unencodedBuffer);
+      psrkeyEncoded = PaysharesBase.PsrKey.encodeSha256Hash(this.unencodedBuffer);
+      expect(psrkeyEncoded).to.match(/^X/);
+      expect(PaysharesBase.PsrKey.decodeSha256Hash(psrkeyEncoded)).to.eql(this.unencodedBuffer);
     });
 
     it("encodes a buffer correctly", function() {
-      expect(StellarBase.StrKey.encodeEd25519PublicKey(this.unencodedBuffer)).to.eql(this.accountIdEncoded);
-      expect(StellarBase.StrKey.encodeEd25519SecretSeed(this.unencodedBuffer)).to.eql(this.seedEncoded);
+      expect(PaysharesBase.PsrKey.encodeEd25519PublicKey(this.unencodedBuffer)).to.eql(this.accountIdEncoded);
+      expect(PaysharesBase.PsrKey.encodeEd25519SecretSeed(this.unencodedBuffer)).to.eql(this.seedEncoded);
     });
 
 
     it("throws an error when the data is null", function() {
-      expect(() => StellarBase.StrKey.encodeEd25519SecretSeed(null)).to.throw(/null data/);
-      expect(() => StellarBase.StrKey.encodeEd25519PublicKey(null)).to.throw(/null data/);
+      expect(() => PaysharesBase.PsrKey.encodeEd25519SecretSeed(null)).to.throw(/null data/);
+      expect(() => PaysharesBase.PsrKey.encodeEd25519PublicKey(null)).to.throw(/null data/);
     });
   });
 
@@ -90,7 +90,7 @@ describe('StrKey', function() {
       ];
 
       for (var i in keys) {
-        expect(StellarBase.StrKey.isValidEd25519PublicKey(keys[i])).to.be.true;
+        expect(PaysharesBase.PsrKey.isValidEd25519PublicKey(keys[i])).to.be.true;
       }
     });
 
@@ -110,7 +110,7 @@ describe('StrKey', function() {
       ];
 
       for (var i in keys) {
-        expect(StellarBase.StrKey.isValidEd25519PublicKey(keys[i])).to.be.false;
+        expect(PaysharesBase.PsrKey.isValidEd25519PublicKey(keys[i])).to.be.false;
       }
     });
 
@@ -128,7 +128,7 @@ describe('StrKey', function() {
       ];
 
       for (var i in keys) {
-        expect(StellarBase.StrKey.isValidEd25519SecretSeed(keys[i])).to.be.true;
+        expect(PaysharesBase.PsrKey.isValidEd25519SecretSeed(keys[i])).to.be.true;
       }
     });
 
@@ -143,7 +143,7 @@ describe('StrKey', function() {
       ];
 
       for (var i in keys) {
-        expect(StellarBase.StrKey.isValidEd25519SecretSeed(keys[i])).to.be.false;
+        expect(PaysharesBase.PsrKey.isValidEd25519SecretSeed(keys[i])).to.be.false;
       }
     });
 

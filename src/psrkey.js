@@ -6,18 +6,18 @@ import isNull from "lodash/isNull";
 import isString from "lodash/isString";
 
 const versionBytes = {
-  ed25519PublicKey:  6 << 3, // G
+  ed25519PublicKey:  15 << 3, // P
   ed25519SecretSeed: 18 << 3, // S
   preAuthTx:         19 << 3, // T
   sha256Hash:        23 << 3  // X
 };
 
 /**
- * StrKey is a helper class that allows encoding and decoding strkey.
+ * PsrKey is a helper class that allows encoding and decoding psrkey.
  */
-export class StrKey {
+export class PsrKey {
   /**
-   * Encodes data to strkey ed25519 public key.
+   * Encodes data to psrkey ed25519 public key.
    * @param {Buffer} data data to encode
    * @returns {string}
    */
@@ -26,7 +26,7 @@ export class StrKey {
   }
 
   /**
-   * Decodes strkey ed25519 public key to raw data.
+   * Decodes psrkey ed25519 public key to raw data.
    * @param {string} data data to decode
    * @returns {Buffer}
    */
@@ -35,7 +35,7 @@ export class StrKey {
   }
 
   /**
-   * Returns true if the given Stellar public key is a valid ed25519 public key.
+   * Returns true if the given Payshares public key is a valid ed25519 public key.
    * @param {string} publicKey public key to check
    * @returns {boolean}
    */
@@ -44,7 +44,7 @@ export class StrKey {
   }
 
   /**
-   * Encodes data to strkey ed25519 seed.
+   * Encodes data to psrkey ed25519 seed.
    * @param {Buffer} data data to encode
    * @returns {string}
    */
@@ -53,7 +53,7 @@ export class StrKey {
   }
 
   /**
-   * Decodes strkey ed25519 seed to raw data.
+   * Decodes psrkey ed25519 seed to raw data.
    * @param {string} data data to decode
    * @returns {Buffer}
    */
@@ -62,7 +62,7 @@ export class StrKey {
   }
 
   /**
-   * Returns true if the given Stellar secret key is a valid ed25519 secret seed.
+   * Returns true if the given Payshares secret key is a valid ed25519 secret seed.
    * @param {string} seed seed to check
    * @returns {boolean}
    */
@@ -71,7 +71,7 @@ export class StrKey {
   }
 
   /**
-   * Encodes data to strkey preAuthTx.
+   * Encodes data to psrkey preAuthTx.
    * @param {Buffer} data data to encode
    * @returns {string}
    */
@@ -80,7 +80,7 @@ export class StrKey {
   }
 
   /**
-   * Decodes strkey PreAuthTx to raw data.
+   * Decodes psrkey PreAuthTx to raw data.
    * @param {string} data data to decode
    * @returns {Buffer}
    */
@@ -89,7 +89,7 @@ export class StrKey {
   }
 
   /**
-   * Encodes data to strkey sha256 hash.
+   * Encodes data to psrkey sha256 hash.
    * @param {Buffer} data data to encode
    * @returns {string}
    */
@@ -98,7 +98,7 @@ export class StrKey {
   }
 
   /**
-   * Decodes strkey sha256 hash to raw data.
+   * Decodes psrkey sha256 hash to raw data.
    * @param {string} data data to decode
    * @returns {Buffer}
    */

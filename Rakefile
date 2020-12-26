@@ -3,16 +3,16 @@ Bundler.setup()
 
 namespace :xdr do
 
-  # As stellar-core adds more .x files, we'll need to update this array
+  # As payshares-core adds more .x files, we'll need to update this array
   # Prior to launch, we should be separating our .x files into a separate
   # repo, and should be able to improve this integration.
   HAYASHI_XDR = [
-                 "src/xdr/Stellar-types.x",
-                 "src/xdr/Stellar-ledger-entries.x",
-                 "src/xdr/Stellar-transaction.x",
-                 "src/xdr/Stellar-ledger.x",
-                 "src/xdr/Stellar-overlay.x",
-                 "src/xdr/Stellar-SCP.x",
+                 "src/xdr/Payshares-types.x",
+                 "src/xdr/Payshares-ledger-entries.x",
+                 "src/xdr/Payshares-transaction.x",
+                 "src/xdr/Payshares-ledger.x",
+                 "src/xdr/Payshares-overlay.x",
+                 "src/xdr/Payshares-SCP.x",
                 ]
 
   task :update => [:download, :generate]
@@ -28,7 +28,7 @@ namespace :xdr do
 
     HAYASHI_XDR.each do |src|
       local_path = "xdr/" + File.basename(src)
-      encoded    = client.contents("stellar/stellar-core", path: src).content
+      encoded    = client.contents("payshares/payshares-core", path: src).content
       decoded    = Base64.decode64 encoded
 
       IO.write(local_path, decoded)
@@ -43,7 +43,7 @@ namespace :xdr do
     compilation = Xdrgen::Compilation.new(
       paths,
       output_dir: "src/generated",
-      namespace:  "stellar-xdr",
+      namespace:  "payshares-xdr",
       language:   :javascript
     )
     compilation.compile

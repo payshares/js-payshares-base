@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:stellar/xdrgen.git
+  remote: git@github.com:payshares/xdrgen.git
   revision: 6c8d27a3b2314be1fc352f53fcb22e418ba296b5
   specs:
     xdrgen (0.0.1)

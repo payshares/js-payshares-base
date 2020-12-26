@@ -4,7 +4,7 @@ module.exports = function(config) {
     browsers : ["Firefox"],
 
     files: [
-      'dist/stellar-base.js',
+      'dist/payshares-base.js',
       'test/unit/**/*.js'
     ],
 

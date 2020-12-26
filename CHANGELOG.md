@@ -22,8 +22,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 ## 0.7.0
 
 * Support for new signer types: `sha256Hash`, `preAuthTx`.
-* `StrKey` helper class with `strkey` encoding related methods.
-* Removed deprecated methods: `Keypair.isValidPublicKey` (use `StrKey`), `Keypair.isValidSecretKey` (use `StrKey`), `Keypair.fromSeed`, `Keypair.seed`, `Keypair.rawSeed`.
+* `PsrKey` helper class with `psrkey` encoding related methods.
+* Removed deprecated methods: `Keypair.isValidPublicKey` (use `PsrKey`), `Keypair.isValidSecretKey` (use `PsrKey`), `Keypair.fromSeed`, `Keypair.seed`, `Keypair.rawSeed`.
 * **Breaking changes**:
   * `Network` must be explicitly selected. Previously testnet was a default network.
   * `Operation.setOptions()` method `signer` param changed.

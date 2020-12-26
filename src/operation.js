@@ -1,8 +1,8 @@
-import {default as xdr} from "./generated/stellar-xdr_generated";
+import {default as xdr} from "./generated/payshares-xdr_generated";
 import {Keypair} from "./keypair";
 import {UnsignedHyper, Hyper} from "js-xdr";
 import {hash} from "./hashing";
-import {StrKey} from "./strkey";
+import {PsrKey} from "./psrkey";
 import {Asset} from "./asset";
 import BigNumber from 'bignumber.js';
 import {best_r} from "./util/continued_fraction";
@@ -21,26 +21,26 @@ const MAX_INT64 = '9223372036854775807';
  * When set using `{@link Operation.setOptions}` option, requires the issuing account to
  * give other accounts permission before they can hold the issuing account’s credit.
  * @constant
- * @see [Account flags](https://www.stellar.org/developers/guides/concepts/accounts.html#flags)
+ * @see [Account flags](https://www.payshares.org/developers/guides/concepts/accounts.html#flags)
  */
 export const AuthRequiredFlag = 1 << 0;
 /**
  * When set using `{@link Operation.setOptions}` option, allows the issuing account to
  * revoke its credit held by other accounts.
  * @constant
- * @see [Account flags](https://www.stellar.org/developers/guides/concepts/accounts.html#flags)
+ * @see [Account flags](https://www.payshares.org/developers/guides/concepts/accounts.html#flags)
  */
 export const AuthRevocableFlag = 1 << 1;
 /**
  * When set using `{@link Operation.setOptions}` option, then none of the authorization flags
  * can be set and the account can never be deleted.
  * @constant
- * @see [Account flags](https://www.stellar.org/developers/guides/concepts/accounts.html#flags)
+ * @see [Account flags](https://www.payshares.org/developers/guides/concepts/accounts.html#flags)
  */
 export const AuthImmutableFlag = 1 << 2;
 
 /**
- * `Operation` class represents [operations](https://www.stellar.org/developers/learn/concepts/operations.html) in Stellar network.
+ * `Operation` class represents [operations](https://www.payshares.org/developers/learn/concepts/operations.html) in Payshares network.
  * Use one of static methods to create operations:
  * * `{@link Operation.createAccount}`
  * * `{@link Operation.payment}`
@@ -61,13 +61,13 @@ export class Operation {
    * Create and fund a non existent account.
    * @param {object} opts
    * @param {string} opts.destination - Destination account ID to create an account for.
-   * @param {string} opts.startingBalance - Amount in XLM the account should be funded for. Must be greater
-   *                                   than the [reserve balance amount](https://www.stellar.org/developers/learn/concepts/fees.html).
+   * @param {string} opts.startingBalance - Amount in XPS the account should be funded for. Must be greater
+   *                                   than the [reserve balance amount](https://www.payshares.org/developers/learn/concepts/fees.html).
    * @param {string} [opts.source] - The source account for the payment. Defaults to the transaction's source account.
    * @returns {xdr.CreateAccountOp}
    */
   static createAccount(opts) {
-    if (!StrKey.isValidEd25519PublicKey(opts.destination)) {
+    if (!PsrKey.isValidEd25519PublicKey(opts.destination)) {
       throw new Error("destination is invalid");
     }
     if (!this.isValidAmount(opts.startingBalance)) {
@@ -95,7 +95,7 @@ export class Operation {
    * @returns {xdr.PaymentOp}
    */
   static payment(opts) {
-    if (!StrKey.isValidEd25519PublicKey(opts.destination)) {
+    if (!PsrKey.isValidEd25519PublicKey(opts.destination)) {
       throw new Error("destination is invalid");
     }
     if (!opts.asset) {
@@ -120,7 +120,7 @@ export class Operation {
 
   /**
    * Returns a XDR PaymentOp. A "payment" operation send the specified amount to the
-   * destination account, optionally through a path. XLM payments create the destination
+   * destination account, optionally through a path. XPS payments create the destination
    * account if it does not exist.
    * @param {object} opts
    * @param {Asset} opts.sendAsset - The asset to pay with.
@@ -139,7 +139,7 @@ export class Operation {
     if (!this.isValidAmount(opts.sendMax)) {
       throw new TypeError(Operation.constructAmountRequirementsError('sendMax'));
     }
-    if (!StrKey.isValidEd25519PublicKey(opts.destination)) {
+    if (!PsrKey.isValidEd25519PublicKey(opts.destination)) {
       throw new Error("destination is invalid");
     }
     if (!opts.destAsset) {
@@ -218,7 +218,7 @@ export class Operation {
    * @returns {xdr.AllowTrustOp}
    */
   static allowTrust(opts) {
-    if (!StrKey.isValidEd25519PublicKey(opts.trustor)) {
+    if (!PsrKey.isValidEd25519PublicKey(opts.trustor)) {
       throw new Error("trustor is invalid");
     }
     let attributes = {};
@@ -268,13 +268,13 @@ export class Operation {
    * @param {string} [opts.homeDomain] - sets the home domain used for reverse federation lookup.
    * @param {string} [opts.source] - The source account (defaults to transaction source).
    * @returns {xdr.SetOptionsOp}
-   * @see [Account flags](https://www.stellar.org/developers/guides/concepts/accounts.html#flags)
+   * @see [Account flags](https://www.payshares.org/developers/guides/concepts/accounts.html#flags)
    */
   static setOptions(opts) {
     let attributes = {};
 
     if (opts.inflationDest) {
-      if (!StrKey.isValidEd25519PublicKey(opts.inflationDest)) {
+      if (!PsrKey.isValidEd25519PublicKey(opts.inflationDest)) {
         throw new Error("inflationDest is invalid");
       }
       attributes.inflationDest = Keypair.fromPublicKey(opts.inflationDest).xdrAccountId();
@@ -307,10 +307,10 @@ export class Operation {
       let setValues = 0;
 
       if (opts.signer.ed25519PublicKey) {
-        if (!StrKey.isValidEd25519PublicKey(opts.signer.ed25519PublicKey)) {
+        if (!PsrKey.isValidEd25519PublicKey(opts.signer.ed25519PublicKey)) {
           throw new Error("signer.ed25519PublicKey is invalid.");
         }
-        let rawKey = StrKey.decodeEd25519PublicKey(opts.signer.ed25519PublicKey);
+        let rawKey = PsrKey.decodeEd25519PublicKey(opts.signer.ed25519PublicKey);
         key = new xdr.SignerKey.signerKeyTypeEd25519(rawKey);
         setValues++;
       }
@@ -444,7 +444,7 @@ export class Operation {
    */
   static accountMerge(opts) {
     let opAttributes = {};
-    if (!StrKey.isValidEd25519PublicKey(opts.destination)) {
+    if (!PsrKey.isValidEd25519PublicKey(opts.destination)) {
       throw new Error("destination is invalid");
     }
     opAttributes.body = xdr.OperationBody.accountMerge(
@@ -509,7 +509,7 @@ export class Operation {
 
   static setSourceAccount(opAttributes, opts) {
     if (opts.source) {
-      if (!StrKey.isValidEd25519PublicKey(opts.source)) {
+      if (!PsrKey.isValidEd25519PublicKey(opts.source)) {
         throw new Error("Source address is invalid");
       }
       opAttributes.sourceAccount = Keypair.fromPublicKey(opts.source).xdrAccountId();
@@ -524,7 +524,7 @@ export class Operation {
    */
   static fromXDRObject(operation) {
     function accountIdtoAddress(accountId) {
-      return StrKey.encodeEd25519PublicKey(accountId.ed25519());
+      return PsrKey.encodeEd25519PublicKey(accountId.ed25519());
     }
 
     let result = {};

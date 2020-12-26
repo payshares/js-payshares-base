@@ -1,16 +1,16 @@
-import {default as xdr} from "./generated/stellar-xdr_generated";
+import {default as xdr} from "./generated/payshares-xdr_generated";
 import {Keypair} from "./keypair";
-import {StrKey} from "./strkey";
+import {PsrKey} from "./psrkey";
 import clone from 'lodash/clone';
 import padEnd from 'lodash/padEnd';
 import trimEnd from 'lodash/trimEnd';
 
 /**
- * Asset class represents an asset, either the native asset (`XLM`)
+ * Asset class represents an asset, either the native asset (`XPS`)
  * or an asset code / issuer account ID pair.
  *
  * An asset code describes an asset code and issuer pair. In the case of the native
- * asset XLM, the issuer will be null.
+ * asset XPS, the issuer will be null.
  *
  * @constructor
  * @param {string} code - The asset code.
@@ -21,10 +21,10 @@ export class Asset {
     if (!/^[a-zA-Z0-9]{1,12}$/.test(code)) {
       throw new Error("Asset code is invalid (maximum alphanumeric, 12 characters at max)");
     }
-    if (String(code).toLowerCase() !== "xlm" && !issuer) {
+    if (String(code).toLowerCase() !== "xps" && !issuer) {
       throw new Error("Issuer cannot be null");
     }
-    if (issuer && !StrKey.isValidEd25519PublicKey(issuer)) {
+    if (issuer && !PsrKey.isValidEd25519PublicKey(issuer)) {
       throw new Error("Issuer is invalid");
     }
 
@@ -37,7 +37,7 @@ export class Asset {
    * @Return {Asset}
    */
   static native() {
-    return new Asset("XLM");
+    return new Asset("XPS");
   }
 
   /**
@@ -52,12 +52,12 @@ export class Asset {
       return this.native();
       case xdr.AssetType.assetTypeCreditAlphanum4():
       anum = assetXdr.alphaNum4();
-      issuer = StrKey.encodeEd25519PublicKey(anum.issuer().ed25519());
+      issuer = PsrKey.encodeEd25519PublicKey(anum.issuer().ed25519());
       code = trimEnd(anum.assetCode(), '\0');
       return new this(code, issuer);
       case xdr.AssetType.assetTypeCreditAlphanum12():
       anum = assetXdr.alphaNum12();
-      issuer = StrKey.encodeEd25519PublicKey(anum.issuer().ed25519());
+      issuer = PsrKey.encodeEd25519PublicKey(anum.issuer().ed25519());
       code = trimEnd(anum.assetCode(), '\0');
       return new this(code, issuer);
       default:
@@ -118,7 +118,7 @@ export class Asset {
    * * `credit_alphanum4`
    * * `credit_alphanum12`
    *
-   * @see [Assets concept](https://www.stellar.org/developers/learn/concepts/assets.html)
+   * @see [Assets concept](https://www.payshares.org/developers/learn/concepts/assets.html)
    * @returns {string}
    */
   getAssetType() {

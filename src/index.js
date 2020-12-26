@@ -1,5 +1,5 @@
 
-import {default as xdr} from "./generated/stellar-xdr_generated";
+import {default as xdr} from "./generated/payshares-xdr_generated";
 
 export {xdr};
 export {hash} from "./hashing";
@@ -13,6 +13,6 @@ export {Operation, AuthRequiredFlag, AuthRevocableFlag, AuthImmutableFlag} from 
 export * from "./memo";
 export {Account} from "./account";
 export {Network, Networks} from "./network";
-export {StrKey} from "./strkey";
+export {PsrKey} from "./psrkey";
 
 export default module.exports;

@@ -1,6 +1,6 @@
 import {xdr, hash} from "./index";
 
-import {StrKey} from "./strkey";
+import {PsrKey} from "./psrkey";
 import {Operation} from "./operation";
 import {Network} from "./network";
 import {Memo} from "./memo";
@@ -28,7 +28,7 @@ export class Transaction {
     }
     // since this transaction is immutable, save the tx
     this.tx       = envelope.tx();
-    this.source   = StrKey.encodeEd25519PublicKey(envelope.tx().sourceAccount().ed25519());
+    this.source   = PsrKey.encodeEd25519PublicKey(envelope.tx().sourceAccount().ed25519());
     this.fee      = this.tx.fee();
     this._memo    = this.tx.memo();
     this.sequence = this.tx.seqNum().toString();
@@ -102,7 +102,7 @@ export class Transaction {
   /**
    * Returns the "signature base" of this transaction, which is the value
    * that, when hashed, should be signed to create a signature that
-   * validators on the Stellar Network will accept.
+   * validators on the Payshares Network will accept.
    *
    * It is composed of a 4 prefix bytes followed by the xdr-encoded form
    * of this transaction.

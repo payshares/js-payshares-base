@@ -1,8 +1,8 @@
 import {Network} from "./network";
 import {sign, verify} from "./signing";
 import * as base58 from "./base58";
-import {StrKey} from "./strkey";
-import {default as xdr} from "./generated/stellar-xdr_generated";
+import {PsrKey} from "./psrkey";
+import {default as xdr} from "./generated/payshares-xdr_generated";
 import nacl from "tweetnacl";
 
 /**
@@ -63,12 +63,12 @@ export class Keypair {
    * @returns {Keypair}
    */
   static fromSecret(secret) {
-    let rawSecret = StrKey.decodeEd25519SecretSeed(secret);
+    let rawSecret = PsrKey.decodeEd25519SecretSeed(secret);
     return this.fromRawEd25519Seed(rawSecret);
   }
 
   /**
-   * Base58 address encoding is **DEPRECATED**! Use this method only for transition to strkey encoding.
+   * Base58 address encoding is **DEPRECATED**! Use this method only for transition to psrkey encoding.
    * @param {string} seed Base58 secret seed
    * @deprecated Use {@link Keypair.fromSecret}
    * @returns {Keypair}
@@ -105,9 +105,9 @@ export class Keypair {
    * @returns {Keypair}
    */
   static fromPublicKey(publicKey) {
-    publicKey = StrKey.decodeEd25519PublicKey(publicKey);
+    publicKey = PsrKey.decodeEd25519PublicKey(publicKey);
     if (publicKey.length !== 32) {
-      throw new Error('Invalid Stellar public key');
+      throw new Error('Invalid Payshares public key');
     }
     return new this({type: 'ed25519', publicKey});
   }
@@ -148,7 +148,7 @@ export class Keypair {
    * @returns {string}
    */
   publicKey() {
-    return StrKey.encodeEd25519PublicKey(this._publicKey);
+    return PsrKey.encodeEd25519PublicKey(this._publicKey);
   }
 
   /**
@@ -161,7 +161,7 @@ export class Keypair {
     }
 
     if (this.type == 'ed25519') {
-      return StrKey.encodeEd25519SecretSeed(this._secretSeed);
+      return PsrKey.encodeEd25519SecretSeed(this._secretSeed);
     }
 
     throw new Error("Invalid Keypair type");

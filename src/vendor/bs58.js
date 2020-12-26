@@ -7,7 +7,7 @@
 // Merged Buffer refactorings from base58-native by Stephen Pair
 // Copyright (c) 2013 BitPay Inc
 
-var ALPHABET = 'gsphnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCr65jkm8oFqi1tuvAxyz';
+var ALPHABET = 'xsphnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCr65jkm8oFqi1tuvAgyz';
 var ALPHABET_MAP = {};
 for(var i = 0; i < ALPHABET.length; ++i) {
   ALPHABET_MAP[ALPHABET.charAt(i)] = i;
